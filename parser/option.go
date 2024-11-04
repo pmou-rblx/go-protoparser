@@ -204,50 +204,7 @@ func (p *Parser) parseOptionName() (string, error) {
 }
 
 func (p *Parser) parseOptionConstant() (constant string, err error) {
-	switch p.lex.Peek() {
-	// Cloud Endpoints requires this exception.
-	case scanner.TLEFTCURLY:
-		if !p.permissive {
-			return "", p.unexpected("constant or permissive mode")
-		}
-
-		// parses empty fields within an option
-		if p.lex.PeekN(2) == scanner.TRIGHTCURLY {
-			p.lex.NextN(2)
-			return "{}", nil
-		}
-
-		constant, err = p.parseCloudEndpointsOptionConstant()
-		if err != nil {
-			return "", err
-		}
-
-	case scanner.TLEFTSQUARE:
-		if !p.permissive {
-			return "", p.unexpected("constant or permissive mode")
-		}
-		p.lex.Next()
-
-		// parses empty fields within an option
-		if p.lex.Peek() == scanner.TRIGHTSQUARE {
-			p.lex.Next()
-			return "[]", nil
-		}
-
-		constant, err = p.parseOptionConstants()
-		if err != nil {
-			return "", err
-		}
-		p.lex.Next()
-		constant = "[" + constant + "]"
-
-	default:
-		constant, _, err = p.lex.ReadConstant(p.permissive)
-		if err != nil {
-			return "", err
-		}
-	}
-	return constant, nil
+	return "", nil
 }
 
 // optionConstants = optionConstant { ","  optionConstant }
